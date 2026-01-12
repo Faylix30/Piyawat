@@ -14,6 +14,24 @@ describe('Admin Page', () => {
         cy.contains('System Users').should('be.visible')
     })
 
+    it('add employee', () => {
+        cy.visit('https://opensource-demo.orangehrmlive.com/web/index.php/auth/login')
+        cy.login('Admin', 'admin123')
+        cy.url().should('include', 'https://opensource-demo.orangehrmlive.com/web/index.php/dashboard/index')
+
+        cy.get(':nth-child(2) > .oxd-main-menu-item').click()
+        cy.url().should('include', 'pim/viewEmployeeList')
+        cy.contains('Employee Information').should('be.visible')
+
+        cy.get('[class="oxd-button oxd-button--medium oxd-button--secondary"]').click()
+        cy.get('[name="firstName"]').type('Piyawat')
+        cy.get('[name="middleName"]').type('Jr.')
+        cy.get('[name="lastName"]').type('Piyawat')
+        cy.get('[class="orangehrm-card-container"]').find('[class="oxd-input oxd-input--active"]').clear().type('777')
+        cy.get('[type="submit"]').contains('Save').click()
+        cy.contains('Successfully Saved').should('be.visible')
+    })
+
     it('navigate to Admin page + Add user', () => {
 
         cy.visit('https://opensource-demo.orangehrmlive.com/web/index.php/auth/login')
@@ -36,7 +54,7 @@ describe('Admin Page', () => {
         cy.get(':nth-child(3) > .oxd-input-group > :nth-child(2) > .oxd-select-wrapper > .oxd-select-text').click()
         cy.contains('Enabled').click();
         cy.get('.oxd-autocomplete-text-input > input').type('piyawat', { timeout: 1000 })
-        cy.contains('piyawat').click()
+        cy.contains('Piyawat Jr.').click()
         cy.get(':nth-child(4) > .oxd-input-group > :nth-child(2) > .oxd-input').type('Superman888')
         cy.get('.user-password-cell > .oxd-input-group > :nth-child(2) > .oxd-input').type('User123')
         cy.get(':nth-child(2) > .oxd-input-group > :nth-child(2) > .oxd-input').type('User123')
@@ -91,6 +109,24 @@ describe('Admin Page', () => {
 
         //Delete
         cy.get('.oxd-table-cell-actions > :nth-child(1)').click()
+        cy.get('.oxd-button--label-danger').click()
+        cy.contains('Successfully Deleted').should('be.visible')
+    })
+
+        it('Delete employee', () => {
+
+        cy.visit('https://opensource-demo.orangehrmlive.com/web/index.php/auth/login')
+        cy.login('Admin', 'admin123')
+        cy.url().should('include', 'https://opensource-demo.orangehrmlive.com/web/index.php/dashboard/index')
+
+        cy.get(':nth-child(2) > .oxd-main-menu-item').click()
+        cy.url().should('include', 'pim/viewEmployeeList')
+        cy.contains('Employee Information').should('be.visible')
+
+        cy.get('[class="oxd-table-filter"]').find('[class="oxd-input oxd-input--active"]').type('777')
+        cy.get('[type="submit"]').contains('Search').click()
+
+        cy.get('[class="orangehrm-paper-container"]').find('[class="oxd-icon bi-trash"]').click()
         cy.get('.oxd-button--label-danger').click()
         cy.contains('Successfully Deleted').should('be.visible')
     })
